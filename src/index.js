@@ -16,7 +16,7 @@ const client = new Client({
 
 // Ready
 client.on('clientReady', (c) => {
-    console.log(`✅ ${c.user.tag} is online.`);
+    console.log(`✅ : ${c.user.tag} is online.`);
 });
 
 
@@ -37,6 +37,7 @@ client.on('messageCreate', (msg) => {
 client.on('interactionCreate', (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
+    // Math cmd
     if (interaction.commandName === 'math') {
         const op = interaction.options.get('operator').value;
         const num1 = interaction.options.get('first-number').value;
@@ -56,6 +57,23 @@ client.on('interactionCreate', (interaction) => {
 
         else if (op === '*') {
             interaction.reply(`${num1 * num2}`);
+        }
+
+        else {
+            interaction.reply("Sorry I don't understand")
+        }
+    }
+
+    // Hug cmd
+    if (interaction.commandName === 'hug') {
+        const user = interaction.options.get('user')?.value;
+
+        if (user !== undefined){
+            interaction.reply(`<@${interaction.user.id}> hugs ${user}`)
+        }
+
+        else {
+            interaction.reply(`<@${interaction.user.id}> hugs themselves`)
         }
     }
 });

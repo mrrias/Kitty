@@ -43,6 +43,17 @@ const commands = [
                 required: true
             }
         ]
+    },
+    {
+        name: 'hug',
+        description: 'Spread love',
+        options: [
+            {
+                name: 'user',
+                description: 'username',
+                type: ApplicationCommandOptionType.String,
+            }
+        ]
     }
 ];
 
