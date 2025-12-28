@@ -7,7 +7,7 @@ const { SlashCommandBuilder } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
     .setName('bean')
-    .setDescription('Bean members')
+    .setDescription('Ban members')
     .addStringOption((option) =>
         option
             .setName('user')
