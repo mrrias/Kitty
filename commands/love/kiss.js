@@ -1,6 +1,34 @@
 
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const fs = require('fs').promises;
+const path = require('path');
 
+
+// get gif
+async function getKissGif() {
+    try {
+        // Find the file in the same directory as this script
+        const filePath = path.join(__dirname, 'kiss-gif.txt');
+        
+        const data = await fs.readFile(filePath, 'utf-8');
+
+        // Split into array and remove empty lines/whitespace
+        const lines = data.split(/\r?\n/).filter(line => line.trim() !== "");
+
+        if (lines.length === 0) {
+            return "Couldn't find kiss gif";
+        }
+
+        // Pick and return a random line
+        const randomValue = lines[Math.floor(Math.random() * lines.length)];
+        return randomValue;
+
+    } catch (err) {
+        // Log the actual error to your terminal so you can debug pathing issues
+        console.error("Error reading kiss-gif.txt:", err.message);
+        return "Failed to load a random GIF. Check if the file exists.";
+    }
+}
 
 // cmd
 module.exports = {
@@ -14,17 +42,29 @@ module.exports = {
     ),
 
     async execute(interaction) {
+        await interaction.reply('-# *Kisses loading...*')
+
         const user = interaction.options.getUser('user');
+        const kissGif = await getKissGif();
 
         if (user) {
-            await interaction.reply(
-                `<@${interaction.user.id}> gibs ${user} a lil kiss`
-            );
+            const kissEmbed = new EmbedBuilder()
+                .setDescription(`<@${interaction.user.id}> gives ${user} a little kiss`)
+                .setImage(kissGif)
+                .setColor(0xFFC0CB);
+            
+            await interaction.editReply({
+                embeds: [kissEmbed]
+            });
 
         } else {
-            await interaction.reply(
-                'Important to love yourself too :3'
-            );
+            const kissEmbed = new EmbedBuilder()
+                .setDescription(`Can't kiss yourself silly *boops*`)
+                .setColor(0xFFC0CB);
+            
+            await interaction.editReply({
+                embeds: [kissEmbed]
+            });
         }
     }
 };
