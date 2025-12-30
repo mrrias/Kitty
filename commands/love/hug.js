@@ -1,27 +1,73 @@
 
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const fs = require('fs').promises;
+const path = require('path');
 
+
+// get gif
+async function getHugGif() {
+    try {
+        // Find the file in the same directory as this script
+        const filePath = path.join(__dirname, 'hug-gif.txt');
+        
+        const data = await fs.readFile(filePath, 'utf-8');
+
+        // Split into array and remove empty lines/whitespace
+        const lines = data.split(/\r?\n/).filter(line => line.trim() !== "");
+
+        if (lines.length === 0) {
+            return "Couldn't find hug gif";
+        }
+
+        // Pick and return a random line
+        const randomValue = lines[Math.floor(Math.random() * lines.length)];
+        return randomValue;
+
+    } catch (err) {
+        // Log the actual error to your terminal so you can debug pathing issues
+        console.error("Error reading hug-gif.txt:", err.message);
+        return "Failed to load a random GIF. Check if the file exists.";
+    }
+}
+
+
+// cmd
 module.exports = {
     data: new SlashCommandBuilder()
     .setName('hug')
     .setDescription('Spread love through the power of hugs')
-    .addStringOption((option) => 
-        option.setName('user')
-        .setDescription('user')
-        .setRequired(false)
+    .addUserOption((option) => 
+        option
+            .setName('user')
+            .setDescription('user')
+            .setRequired(false)
     ),
 
     async execute(interaction) {
-        const user = interaction.options.getString('user');
+        await interaction.reply('-# *Sending hugs...*')
+
+        const user = interaction.options.getUser('user');
+        const hugGif = await getHugGif();
 
         if (user) {
-            await interaction.reply(
-                `<@${interaction.user.id}> hugs ${user}`
-            );
+            const hugEmbed = new EmbedBuilder()
+                .setDescription(`<@${interaction.user.id}> hugs ${user}`)
+                .setImage(hugGif)
+                .setColor(0xFFC0CB);
+
+            await interaction.editReply({
+                embeds: [hugEmbed]
+            });
+           
         } else {
-            await interaction.reply(
-                `<@${interaction.user.id}> hugs themselves!`
-            );
+            const hugEmbed = new EmbedBuilder()
+                .setDescription(`<@${interaction.user.id}> hugs themselves!`)
+                .setImage(hugGif)
+                .setColor(0xFFC0CB);
+
+            await interaction.editReply({
+                embeds: [hugEmbed]
+            });
         }
     }
 };

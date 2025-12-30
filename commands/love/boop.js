@@ -42,7 +42,7 @@ module.exports = {
         ),
 
     async execute(interaction) {
-        await interaction.reply('-# Booping...');
+        await interaction.reply('-# *Booping...*');
 
         const boopGif = await getBoopgif();
         const user = interaction.options.getUser('user');

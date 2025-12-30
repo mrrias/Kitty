@@ -13,7 +13,6 @@ module.exports = {
             .addChoices(
                 { name: 'high-five', value: 'high-five' },
                 { name: 'slap', value: 'slap' },
-                { name: 'kiss', value: 'kiss' },
             )
     )
     .addStringOption((option) => 
@@ -52,19 +51,6 @@ module.exports = {
                 } else {
                     await interaction.reply(
                         'Hey why are you tring to slap yourself?'
-                    )
-                }
-
-            } else if (actionName === 'kiss') {
-                
-                if (user) {
-                    await interaction.reply(
-                        `<@${interaction.user.id}> gibs ${user} a lil kiss`
-                    );
-
-                } else {
-                    await interaction.reply(
-                        'Important to love yourself too :3'
                     )
                 }
 
