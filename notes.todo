@@ -1,7 +1,20 @@
 
-+ Add embeds to /actions
-+ Add embeds to /bean
-+ Update all cmds taking {user}
+Today :
+    + Add /tuck cmd
+    + Move all /actions into seperate cmds
+    + Make /high-five cmd
+    + Make /slap cmd
 
-- Add gifs to /actions
-- Add a auto mod
+    - Add gifs to /tuck
+    - Add gifs to /high-five
+    - Add gifs to /slap
+
+    x Add gifs to /actions
+
+
+Tomorrow :
+    - Search cmd
+    - Gif cmd
+    - Add sticky msgs
+    - Add a auto mod
+
