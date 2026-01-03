@@ -4,10 +4,10 @@ const fs = require("fs").promises;
 const path = require("path");
 
 // get gif
-async function getHighFiveGif() {
+async function getBonkGif() {
   try {
     // Find the file in the same directory as this script
-    const filePath = path.join(__dirname, "high-five-gif.txt");
+    const filePath = path.join(__dirname, "bonk-gif.txt");
 
     const data = await fs.readFile(filePath, "utf-8");
 
@@ -15,7 +15,7 @@ async function getHighFiveGif() {
     const lines = data.split(/\r?\n/).filter((line) => line.trim() !== "");
 
     if (lines.length === 0) {
-      return "Couldn't find high-five gif";
+      return "Couldn't find bonk gif";
     }
 
     // Pick and return a random line
@@ -23,33 +23,34 @@ async function getHighFiveGif() {
     return randomValue;
   } catch (err) {
     // Log the actual error to your terminal so you can debug pathing issues
-    console.error("Error reading high-five-gif.txt:", err.message);
+    console.error("Error reading bonk-gif.txt:", err.message);
     return "Failed to load a random GIF. Check if the file exists.";
   }
 }
 
+// cmd
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("high-five")
-    .setDescription("High five a user")
+    .setName("bonk")
+    .setDescription("Bonk users")
     .addUserOption((option) =>
       option.setName("user").setDescription("user").setRequired(true)
     ),
 
   async execute(interaction) {
     const user = interaction.options.getUser("user");
-    const highFiveGif = await getHighFiveGif();
+    const bonkGif = await getBonkGif();
 
-    await interaction.reply(`-# *Loading...*`);
+    await interaction.reply(`-# *Bonking...*`);
 
-    const highFiveEmbed = new EmbedBuilder()
-      .setDescription(`<@${interaction.user.id}> gives ${user} a high five`)
-      .setImage(highFiveGif)
+    const bonkEmbed = new EmbedBuilder()
+      .setDescription(`<@${interaction.user.id}> bonks ${user}`)
+      .setImage(bonkGif)
       .setColor(embedColor);
 
-    await interaction.editReply(`-# Loaded!`);
+    await interaction.editReply(`-# Bonked`);
     await interaction.editReply({
-      embeds: [highFiveEmbed],
+      embeds: [bonkEmbed],
     });
   },
 };

@@ -1,18 +1,22 @@
 
-Today :
+Yesterday :
     + Add /tuck cmd
     + Move all /actions into seperate cmds
     + Make /high-five cmd
     + Make /slap cmd
-
-    - Add gifs to /tuck
-    - Add gifs to /high-five
-    - Add gifs to /slap
-
     x Add gifs to /actions
 
 
-Tomorrow :
+Today :
+    + Add gifs to /tuck
+    + Add gifs to /high-five
+    + Add gifs to /slap
+    + Add /bonk cmd
+    - Look into free deploy for bot
+    x Fix error handling 
+
+
+Ideas :
     - Search cmd
     - Gif cmd
     - Add sticky msgs
