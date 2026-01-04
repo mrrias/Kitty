@@ -1,19 +1,14 @@
 
-Yesterday :
-    + Add /tuck cmd
-    + Move all /actions into seperate cmds
-    + Make /high-five cmd
-    + Make /slap cmd
-    x Add gifs to /actions
-
 
 Today :
-    + Add gifs to /tuck
-    + Add gifs to /high-five
-    + Add gifs to /slap
-    + Add /bonk cmd
+    + Add /explode
+    + Rename folder "serious" -> "actions"
+    + Move /bean to action
+    + Add /bonk
+    - Add /wave
+    - Add /thumbsup
+    - Push changes
     - Look into free deploy for bot
-    x Fix error handling 
 
 
 Ideas :

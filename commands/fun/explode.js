@@ -2,12 +2,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { embedColor } = require("../variables/vars.js");
 const fs = require("fs").promises;
 const path = require("path");
+const { get } = require("mongoose");
 
-// Get gif
-async function getBoopgif() {
+// get gif
+async function getExplodeGif() {
   try {
     // Find the file in the same directory as this script
-    const filePath = path.join(__dirname, "boop-gif.txt");
+    const filePath = path.join(__dirname, "explode-gif.txt");
 
     const data = await fs.readFile(filePath, "utf-8");
 
@@ -15,7 +16,7 @@ async function getBoopgif() {
     const lines = data.split(/\r?\n/).filter((line) => line.trim() !== "");
 
     if (lines.length === 0) {
-      return "Couldn't find boop gif";
+      return "Couldn't find explode gif";
     }
 
     // Pick and return a random line
@@ -23,7 +24,7 @@ async function getBoopgif() {
     return randomValue;
   } catch (err) {
     // Log the actual error to your terminal so you can debug pathing issues
-    console.error("Error reading boop-gif.txt:", err.message);
+    console.error("Error reading explode-gif.txt:", err.message);
     return "Failed to load a random GIF. Check if the file exists.";
   }
 }
@@ -31,40 +32,37 @@ async function getBoopgif() {
 // cmd
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName("boop")
-    .setDescription("Boops")
+    .setName("explode")
+    .setDescription("Explode a user!")
     .addUserOption((option) =>
-      option
-        .setName("user")
-        .setDescription("The user you want to boop")
-        .setRequired(false)
+      option.setName("user").setDescription("user").setRequired(false)
     ),
 
   async execute(interaction) {
-    await interaction.reply("-# *Booping...*");
-
-    const boopGif = await getBoopgif();
     const user = interaction.options.getUser("user");
+    const explodeGif = await getExplodeGif();
+
+    await interaction.reply(`-# *Exploding...*`);
 
     if (user) {
-      const boopEmbed = new EmbedBuilder()
-        .setDescription(`<@${interaction.user.id}> boops ${user}`)
-        .setImage(boopGif)
+      const explodeEmbed = new EmbedBuilder()
+        .setDescription(`<@${interaction.user.id}> explodes ${user}`)
+        .setImage(explodeGif)
         .setColor(embedColor);
 
-      await interaction.editReply(`-# Booped`);
+      await interaction.editReply(`-# Exploded`);
       await interaction.editReply({
-        embeds: [boopEmbed],
+        embeds: [explodeEmbed],
       });
     } else {
-      const boopEmbed = new EmbedBuilder()
-        .setDescription(`<@${interaction.user.id}> boops themselves!`)
-        .setImage(boopGif)
+      const explodeEmbed = new EmbedBuilder()
+        .setDescription(`<@${interaction.user.id}> explodes!`)
+        .setImage(explodeGif)
         .setColor(embedColor);
 
-      await interaction.editReply(`-# Booped`);
+      await interaction.editReply(`-# Exploded`);
       await interaction.editReply({
-        embeds: [boopEmbed],
+        embeds: [explodeEmbed],
       });
     }
   },
