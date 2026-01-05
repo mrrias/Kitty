@@ -1,7 +1,8 @@
-// Require the necessary classes
+// Core modules
 const fs = require("node:fs");
 const path = require("node:path");
-// const mongoose = require('mongoose');
+
+// Discord.js
 const {
   Client,
   Collection,
@@ -9,70 +10,131 @@ const {
   GatewayIntentBits,
   MessageFlags,
 } = require("discord.js");
+
+// Config
 const { token } = require("./config.json");
+const prefix = "-";
 
-// Create a new client
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+// Create client
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+});
 
-// When bot is running
+// READY EVENT
 client.once(Events.ClientReady, (readyClient) => {
   console.log(`✅ ${readyClient.user.tag} is online`);
 });
 
-// cmds
+// SLASH COMMANDS LOADER
 client.commands = new Collection();
+const slashFoldersPath = path.join(__dirname, "slash_commands");
 
-const foldersPath = path.join(__dirname, "commands");
-const commandFolders = fs.readdirSync(foldersPath);
+if (fs.existsSync(slashFoldersPath)) {
+  const slashCommandFolders = fs.readdirSync(slashFoldersPath);
 
-for (const folder of commandFolders) {
-  const commandsPath = path.join(foldersPath, folder);
-  const commandFiles = fs
-    .readdirSync(commandsPath)
-    .filter((file) => file.endsWith(".js"));
+  for (const folder of slashCommandFolders) {
+    const commandsPath = path.join(slashFoldersPath, folder);
 
-  for (const file of commandFiles) {
-    const filePath = path.join(commandsPath, file);
-    const command = require(filePath);
+    // Check if it's a folder (like 'actions', 'fun', 'love')
+    if (!fs.lstatSync(commandsPath).isDirectory()) continue;
 
-    // Set a new item in the Collection with the key as the command name and the value as the exported module
-    if ("data" in command && "execute" in command) {
-      client.commands.set(command.data.name, command);
-    } else {
-      console.log(
-        `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
-      );
+    const commandFiles = fs
+      .readdirSync(commandsPath)
+      .filter((file) => file.endsWith(".js"));
+
+    for (const file of commandFiles) {
+      const filePath = path.join(commandsPath, file);
+      try {
+        const command = require(filePath);
+        if ("data" in command && "execute" in command) {
+          client.commands.set(command.data.name, command);
+        }
+      } catch (error) {
+        console.error(
+          `❌ Error loading slash command at ${filePath}:`,
+          error.message
+        );
+      }
     }
   }
 }
 
-// Listener
+// PREFIX COMMANDS LOADER
+client.prefixCommands = new Collection();
+const prefixFoldersPath = path.join(__dirname, "prefix_commands");
+
+if (fs.existsSync(prefixFoldersPath)) {
+  const prefixCommandFolders = fs.readdirSync(prefixFoldersPath);
+
+  for (const folder of prefixCommandFolders) {
+    const commandsPath = path.join(prefixFoldersPath, folder);
+
+    if (!fs.lstatSync(commandsPath).isDirectory()) continue;
+
+    const commandFiles = fs
+      .readdirSync(commandsPath)
+      .filter((file) => file.endsWith(".js"));
+
+    for (const file of commandFiles) {
+      const filePath = path.join(commandsPath, file);
+      try {
+        const command = require(filePath);
+        if ("name" in command && "execute" in command) {
+          client.prefixCommands.set(command.name, command);
+        }
+      } catch (error) {
+        console.error(
+          `❌ Error loading prefix command at ${filePath}:`,
+          error.message
+        );
+      }
+    }
+  }
+}
+
+// SLASH COMMAND HANDLER
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
-  const command = interaction.client.commands.get(interaction.commandName);
 
-  if (!command) {
-    console.error(`No command matching ${interaction.commandName} was found.`);
-    return;
-  }
+  const command = client.commands.get(interaction.commandName);
+  if (!command) return;
 
   try {
     await command.execute(interaction);
   } catch (error) {
     console.error(error);
+    const replyOptions = {
+      content: "There was an error while executing this command!",
+      flags: MessageFlags.Ephemeral,
+    };
     if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({
-        content: "There was an error while executing this command!",
-        flags: MessageFlags.Ephemeral,
-      });
+      await interaction.followUp(replyOptions);
     } else {
-      await interaction.reply({
-        content: "There was an error while executing this command!",
-        flags: MessageFlags.Ephemeral,
-      });
+      await interaction.reply(replyOptions);
     }
   }
 });
 
-// Log in
+// PREFIX COMMAND HANDLER
+client.on(Events.MessageCreate, async (message) => {
+  if (message.author.bot || !message.content.startsWith(prefix)) return;
+
+  const args = message.content.slice(prefix.length).trim().split(/ +/);
+  const commandName = args.shift().toLowerCase();
+
+  const command = client.prefixCommands.get(commandName);
+  if (!command) return;
+
+  try {
+    await command.execute(message, args);
+  } catch (error) {
+    console.error(error);
+    message.reply("There was an error executing that command.");
+  }
+});
+
 client.login(token);

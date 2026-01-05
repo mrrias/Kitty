@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { embedColor } = require("../variables/vars.js");
+const { embedColor } = require("../../variables/vars.js");
 const fs = require("fs").promises;
 const path = require("path");
 
@@ -40,30 +40,26 @@ module.exports = {
         .setRequired(false)
     ),
 
-  async execute(interaction) {
-    await interaction.reply("-# *Booping...*");
-
+  async execute(message) {
     const boopGif = await getBoopgif();
-    const user = interaction.options.getUser("user");
+    const user = message.options.getUser("user");
 
     if (user) {
       const boopEmbed = new EmbedBuilder()
-        .setDescription(`<@${interaction.user.id}> boops ${user}`)
+        .setDescription(`<@${message.user.id}> boops ${user}`)
         .setImage(boopGif)
         .setColor(embedColor);
 
-      await interaction.editReply(`-# Booped`);
-      await interaction.editReply({
+      await message.reply({
         embeds: [boopEmbed],
       });
     } else {
       const boopEmbed = new EmbedBuilder()
-        .setDescription(`<@${interaction.user.id}> boops themselves!`)
+        .setDescription(`<@${message.user.id}> boops themselves!`)
         .setImage(boopGif)
         .setColor(embedColor);
 
-      await interaction.editReply(`-# Booped`);
-      await interaction.editReply({
+      await message.reply({
         embeds: [boopEmbed],
       });
     }

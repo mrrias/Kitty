@@ -1,18 +1,31 @@
 
 
 Today :
-    + Add /explode
-    + Rename folder "serious" -> "actions"
-    + Move /bean to action
-    + Add /bonk
-    + Add /wave
-    + Add /thumbsup
-    + Fix /boop
-    + Push changes
+    + Fix variable path
+    + Add prefix cmds
 
-    + Add /truck cmd
-    x Add random gifs to /truck
-    - Look into free deploy for bot
+
+    - Fix embeds for '/' cmds ( see /hug )
+        + /hug
+        + /boop
+        + /kiss
+
+    - Move '/' cmds into prefix format
+        + Make -bean embed look nice
+        + /explode
+        - /wave
+        - /tuck
+        - /truck
+        - /thumbsup
+        - /slap
+        - /math
+        - /high-five
+        - /bonk
+    
+    + Add -doakes cmd
+    - Add /help cmd
+
+    x Add auto reply
 
 
 Ideas :

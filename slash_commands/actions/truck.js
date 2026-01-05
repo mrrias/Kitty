@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { embedColor } = require("../variables/vars.js");
+const { embedColor } = require("../../variables/vars.js");
 
 // cmd
 module.exports = {

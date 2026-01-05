@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { embedColor } = require("../variables/vars.js");
+const { embedColor } = require("../../variables/vars.js");
 const fs = require("fs").promises;
 const path = require("path");
 
@@ -35,27 +35,25 @@ module.exports = {
     .setDescription("Kiss user")
     .addUserOption((option) => option.setName("user").setDescription("user")),
 
-  async execute(interaction) {
-    await interaction.reply("-# *Kisses loading...*");
-
-    const user = interaction.options.getUser("user");
+  async execute(message) {
+    const user = message.options.getUser("user");
     const kissGif = await getKissGif();
 
     if (user) {
       const kissEmbed = new EmbedBuilder()
-        .setDescription(`<@${interaction.user.id}> gives ${user} a little kiss`)
+        .setDescription(`<@${message.user.id}> gives ${user} a little kiss`)
         .setImage(kissGif)
         .setColor(embedColor);
 
-      await interaction.editReply({
+      await message.reply({
         embeds: [kissEmbed],
       });
     } else {
       const kissEmbed = new EmbedBuilder()
-        .setDescription(`Can't kiss yourself silly *boops*`)
+        .setDescription(`Can't kiss yourself silly ~ *boops*`)
         .setColor(embedColor);
 
-      await interaction.editReply({
+      await message.reply({
         embeds: [kissEmbed],
       });
     }
