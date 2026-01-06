@@ -1,32 +1,19 @@
 
 
 Today :
-    + Fix variable path
-    + Add prefix cmds
-
-
-    - Fix embeds for '/' cmds ( see /hug )
-        + /hug
-        + /boop
-        + /kiss
-
-    - Move '/' cmds into prefix format
-        + Make -bean embed look nice
-        + /explode
-        - /wave
-        - /tuck
-        - /truck
-        - /thumbsup
-        - /slap
-        - /math
-        - /high-five
-        - /bonk
+    + Move '/' cmds into prefix format
+        + /tuck
+        + /truck
+        + /thumbsup
+        + /slap
+        + delete /math
+        + /high-five
+        + /bonk
     
-    + Add -doakes cmd
-    + Improve -bean embeds
+    - Add -dies
     - Add /help cmd
+    - Sort files
 
-    x Add auto reply
 
 
 Ideas :

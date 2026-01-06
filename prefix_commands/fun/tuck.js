@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { embedColor } = require("../../variables/vars.js");
 const fs = require("fs").promises;
 const path = require("path");
@@ -30,37 +30,28 @@ async function getTuckGif() {
 
 // cmd
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("tuck")
-    .setDescription("Tuck in a user for sleeps")
-    .addUserOption((option) => option.setName("user").setDescription("user")),
+  name: "tuck",
 
-  async execute(interaction) {
-    const user = interaction.options.getUser("user");
+  async execute(message) {
     const tuckGif = await getTuckGif();
-
-    await interaction.reply("-# *Tucking*");
+    let user = message.mentions.users.first();
 
     if (user) {
       const tuckEmbed = new EmbedBuilder()
-        .setDescription(
-          `<@${interaction.user.id}> tucks ${user} into bed... sleep well`
-        )
+        .setDescription(`${message.author} tucks ${user} into bed`)
         .setImage(tuckGif)
         .setColor(embedColor);
 
-      await interaction.editReply(`-# Night night`);
-      await interaction.editReply({
+      await message.reply({
         embeds: [tuckEmbed],
       });
     } else {
       const tuckEmbed = new EmbedBuilder()
-        .setDescription(`<@${interaction.user.id}> tucks themselves into bed`)
+        .setDescription(`${message.author} tucks themselves into bed`)
         .setImage(tuckGif)
         .setColor(embedColor);
 
-      await interaction.editReply(`-# Goodnight`);
-      await interaction.editReply({
+      await message.reply({
         embeds: [tuckEmbed],
       });
     }

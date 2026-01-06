@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { embedColor } = require("../../variables/vars.js");
 const fs = require("fs").promises;
 const path = require("path");
@@ -30,27 +30,30 @@ async function getBonkGif() {
 
 // cmd
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("bonk")
-    .setDescription("Bonk users")
-    .addUserOption((option) =>
-      option.setName("user").setDescription("user").setRequired(true)
-    ),
+  name: "bonk",
 
-  async execute(interaction) {
-    const user = interaction.options.getUser("user");
+  async execute(message) {
+    const user = message.mentions.users.first();
     const bonkGif = await getBonkGif();
 
-    await interaction.reply(`-# *Bonking...*`);
+    if (user) {
+      const bonkEmbed = new EmbedBuilder()
+        .setDescription(`${message.author} bonks ${user}`)
+        .setImage(bonkGif)
+        .setColor(embedColor);
 
-    const bonkEmbed = new EmbedBuilder()
-      .setDescription(`<@${interaction.user.id}> bonks ${user}`)
-      .setImage(bonkGif)
-      .setColor(embedColor);
+      await message.reply({
+        embeds: [bonkEmbed],
+      });
+    } else {
+      const bonkEmbed = new EmbedBuilder()
+        .setDescription(`${message.author} bonks themselves... **ow**`)
+        .setImage(bonkGif)
+        .setColor(embedColor);
 
-    await interaction.editReply(`-# Bonked`);
-    await interaction.editReply({
-      embeds: [bonkEmbed],
-    });
+      await message.reply({
+        embeds: [bonkEmbed],
+      });
+    }
   },
 };

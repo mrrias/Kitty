@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { embedColor } = require("../../variables/vars.js");
 const fs = require("fs").promises;
 const path = require("path");
@@ -30,37 +30,30 @@ async function getThumbsupGif() {
 
 // cmd
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("thumbsup")
-    .setDescription("Thumbsup to agree")
-    .addUserOption((option) =>
-      option.setName("user").setDescription("user").setRequired(false)
-    ),
+  name: "thumbsup",
 
-  async execute(interaction) {
-    const user = interaction.options.getUser("user");
+  async execute(message) {
     const thumbsupGif = await getThumbsupGif();
-
-    await interaction.reply(`-# *Loading...*`);
+    const user = message.mentions.users.first();
 
     if (user) {
       const thumbsupEmbed = new EmbedBuilder()
-        .setDescription(`<@${interaction.user.id}> agrees with ${user}`)
+        .setDescription(`${message.author} agrees with ${user}`)
         .setImage(thumbsupGif)
         .setColor(embedColor);
 
-      await interaction.editReply(`-# Loaded`);
-      await interaction.editReply({
+      await message.reply({
         embeds: [thumbsupEmbed],
       });
     } else {
       const thumbsupEmbed = new EmbedBuilder()
-        .setDescription(`You agree with yourself... *how sad*...`)
+        .setDescription(
+          `${message.author} agrees with themeselves \n-# *how sad...*`
+        )
         .setImage(thumbsupGif)
         .setColor(embedColor);
 
-      await interaction.editReply(`-# Loaded`);
-      await interaction.editReply({
+      await message.reply({
         embeds: [thumbsupEmbed],
       });
     }

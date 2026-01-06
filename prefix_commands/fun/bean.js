@@ -12,7 +12,7 @@ module.exports = {
     }
 
     if (!user) {
-      const erroEmbed = new ContainerBuilder()
+      const errorEmbed = new ContainerBuilder()
         .addTextDisplayComponents((textDisplay) =>
           textDisplay.setContent(
             `**You must provide a mention or a valid user ID.**`
@@ -28,7 +28,7 @@ module.exports = {
         .setAccentColor(embedColor);
 
       await message.reply({
-        components: [erroEmbed],
+        components: [errorEmbed],
         flags: MessageFlags.IsComponentsV2,
       });
     } else {
